@@ -34,7 +34,7 @@ export function formatPrice(value: number): string {
   }).format(value);
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   fn: T,
   ms: number
 ): (...args: Parameters<T>) => void {
