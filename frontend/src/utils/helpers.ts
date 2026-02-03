@@ -34,13 +34,15 @@ export function formatPrice(value: number): string {
   }).format(value);
 }
 
-export function debounce<T extends (...args: unknown[]) => void>(
+export function debounce<T extends (...args: any[]) => any>(
   fn: T,
   ms: number
 ): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), ms);
+    timeout = setTimeout(() => {
+      void fn(...args);
+    }, ms);
   };
 }
