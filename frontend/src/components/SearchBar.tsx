@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { debounce } from "@/utils/helpers";
 
 interface SearchBarProps {
@@ -18,10 +18,8 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [local, setLocal] = useState(value);
 
-  const debouncedOnChange = useCallback(
-    debounce((v: string) => onChange(v), debounceMs),
-    [onChange, debounceMs]
-  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedOnChange = debounce((...args: unknown[]) => onChange(args[0] as string), debounceMs);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value;

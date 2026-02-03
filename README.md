@@ -63,6 +63,8 @@ npm run dev
 
 Приложение: http://localhost:3000
 
+Перед деплоем (например на Vercel) проверьте сборку локально: `npm run build` — так вы увидите те же ошибки типов и линтера, что и на CI.
+
 ## API (кратко)
 
 - `GET /api/products/` — список с фильтрами `category`, `min_price`, `max_price`, `search`, `sort_by`, `sort_order`, `limit`, `offset`

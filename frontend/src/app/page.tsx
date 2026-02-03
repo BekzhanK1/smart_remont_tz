@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import Header from "@/components/Header";
@@ -66,7 +65,7 @@ const CATEGORIES = [
   "Ремонт",
 ];
 
-export default function HomePage() {
+function HomePageContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<FilterState>(() => {
     const fromUrl = filtersFromSearchParams(searchParams);
@@ -218,5 +217,13 @@ export default function HomePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-500">Загрузка…</div>}>
+      <HomePageContent />
+    </Suspense>
   );
 }
