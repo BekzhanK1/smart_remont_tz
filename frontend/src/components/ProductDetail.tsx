@@ -56,7 +56,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   return (
     <article className="mx-auto max-w-4xl">
       <div className="grid gap-8 md:grid-cols-2">
-        <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-100">
+        <div className="relative aspect-square overflow-hidden rounded-2xl bg-slate-100 shadow-sm">
           {product.image ? (
             <Image
               src={product.image}
@@ -98,27 +98,30 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                   max={999}
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                  className="w-20 rounded-lg border border-slate-300 px-3 py-2 text-center"
+                  className="w-20 rounded-xl border-2 border-slate-200 px-3 py-2 text-center focus:border-emerald-500 focus:outline-none"
                 />
               </label>
             )}
             {!user ? (
               <Link
                 href="/login"
-                className="rounded-lg border border-slate-300 bg-white px-6 py-2.5 font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-xl border-2 border-slate-200 bg-white px-6 py-2.5 font-medium text-slate-600 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
               >
                 Войти, чтобы добавить в корзину
               </Link>
             ) : inCart ? (
-              <span className="rounded-lg bg-slate-600 px-6 py-2.5 font-medium text-white">
-                Добавлено в корзину
-              </span>
+              <Link
+                href="/cart"
+                className="rounded-xl bg-emerald-600 px-6 py-2.5 font-medium text-white hover:bg-emerald-500 transition-colors"
+              >
+                В корзине →
+              </Link>
             ) : (
               <button
                 type="button"
                 onClick={handleAddToCart}
                 disabled={adding}
-                className="rounded-lg bg-slate-800 px-6 py-2.5 font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+                className="rounded-xl bg-emerald-600 px-6 py-2.5 font-medium text-white hover:bg-emerald-500 disabled:opacity-60 transition-colors"
               >
                 {adding ? "Добавляем…" : "В корзину"}
               </button>
@@ -131,10 +134,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 else toast.info("Убрано из сравнения");
               }}
               disabled={!inCompare && compareCount >= MAX_COMPARE_ITEMS}
-              className={`rounded-lg border px-4 py-2.5 font-medium ${
+              className={`rounded-xl border-2 px-4 py-2.5 font-medium transition-colors ${
                 inCompare
-                  ? "border-slate-800 bg-slate-800 text-white"
-                  : "border-slate-300 text-slate-700 hover:border-slate-400"
+                  ? "border-emerald-600 bg-emerald-600 text-white"
+                  : "border-slate-200 text-slate-600 hover:border-slate-300"
               } disabled:opacity-50`}
             >
               {inCompare ? "В сравнении ✓" : "Сравнить"}

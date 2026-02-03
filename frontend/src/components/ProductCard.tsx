@@ -23,6 +23,7 @@ export default function ProductCard({
   onDragStart,
 }: ProductCardProps) {
   const [adding, setAdding] = useState(false);
+  const [qty, setQty] = useState(1);
   const user = useAuthStore((s) => s.user);
   const addItemOptimistic = useCartStore((s) => s.addItemOptimistic);
   const setCart = useCartStore((s) => s.setCart);
@@ -35,6 +36,7 @@ export default function ProductCard({
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
+    const amount = Math.max(1, Math.min(99, qty));
     if (adding || !user) return;
     setAdding(true);
     const optimisticItem = {
@@ -43,12 +45,12 @@ export default function ProductCard({
       product_name: product.name,
       product_price: product.price,
       product_image: product.image,
-      quantity: 1,
-      subtotal: product.price,
+      quantity: amount,
+      subtotal: product.price * amount,
     };
     addItemOptimistic(optimisticItem);
     try {
-      const cart = await addToCart(product.id, 1);
+      const cart = await addToCart(product.id, amount);
       setCart(cart.items, cart.total);
       toast.success("Добавлено в корзину");
     } catch {
@@ -77,9 +79,9 @@ export default function ProductCard({
     <article
       draggable={draggable}
       onDragStart={handleDragStart}
-      className="group flex flex-col rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-slate-300"
+      className="group flex flex-col rounded-2xl border-2 border-slate-200/80 bg-white shadow-sm transition-all hover:shadow-lg hover:border-emerald-200/80"
     >
-      <Link href={`/product/${product.id}`} className="block overflow-hidden rounded-t-xl">
+      <Link href={`/product/${product.id}`} className="block overflow-hidden rounded-t-2xl">
         <div className="relative aspect-square bg-slate-100">
           {product.image ? (
             <Image
@@ -104,37 +106,50 @@ export default function ProductCard({
           </h3>
         </Link>
         <p className="mt-2 text-lg font-bold text-slate-900">{formatPrice(product.price)}</p>
-        <div className="mt-auto mt-3 flex gap-2">
+        <div className="mt-auto mt-3 flex flex-wrap items-center gap-2">
           {!user ? (
             <Link
               href="/login"
-              className="flex flex-1 items-center justify-center rounded-lg border border-slate-300 bg-white py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="flex flex-1 min-w-0 items-center justify-center rounded-xl border-2 border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-600 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
             >
               Войти, чтобы добавить
             </Link>
           ) : inCart ? (
-            <span className="flex flex-1 items-center justify-center rounded-lg bg-slate-600 py-2.5 text-sm font-medium text-white">
-              Добавлено
-            </span>
-          ) : (
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={adding}
-              className="flex-1 rounded-lg bg-slate-800 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700 disabled:opacity-60"
+            <Link
+              href="/cart"
+              className="flex flex-1 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
             >
-              {adding ? "Добавляем…" : "В корзину"}
-            </button>
+              В корзине →
+            </Link>
+          ) : (
+            <>
+              <input
+                type="number"
+                min={1}
+                max={99}
+                value={qty}
+                onChange={(e) => setQty(Math.max(1, Math.min(99, parseInt(e.target.value, 10) || 1)))}
+                className="w-14 rounded-xl border-2 border-slate-200 px-2 py-1.5 text-center text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              />
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={adding}
+                className="flex-1 min-w-0 rounded-xl bg-emerald-600 py-2.5 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-60 transition-colors"
+              >
+                {adding ? "…" : "В корзину"}
+              </button>
+            </>
           )}
           <button
             type="button"
             onClick={handleCompare}
             disabled={!inCompare && compareCount >= MAX_COMPARE_ITEMS}
             title={inCompare ? "Убрать из сравнения" : "Добавить в сравнение"}
-            className={`rounded-lg border px-2.5 py-2.5 text-sm font-medium transition-colors ${
+            className={`rounded-xl border-2 px-2.5 py-2.5 text-sm font-medium transition-colors ${
               inCompare
-                ? "border-slate-800 bg-slate-800 text-white"
-                : "border-slate-300 text-slate-600 hover:border-slate-400"
+                ? "border-emerald-600 bg-emerald-600 text-white"
+                : "border-slate-200 text-slate-500 hover:border-slate-300"
             } disabled:opacity-50`}
           >
             {inCompare ? "✓" : "⇔"}

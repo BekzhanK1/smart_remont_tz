@@ -10,15 +10,15 @@ interface FilterPanelProps {
 
 export default function FilterPanel({ filters, onChange, categories }: FilterPanelProps) {
   return (
-    <aside className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h3 className="font-semibold text-slate-800 mb-3">Фильтры</h3>
+    <aside className="rounded-2xl border-2 border-slate-200/80 bg-white p-5 shadow-sm">
+      <h3 className="font-semibold text-slate-800 mb-4">Фильтры</h3>
       <div className="space-y-4">
         <div>
-          <label className="block text-sm text-slate-600 mb-1">Категория</label>
+          <label className="block text-sm font-medium text-slate-600 mb-1.5">Категория</label>
           <select
             value={filters.category}
             onChange={(e) => onChange({ category: e.target.value, offset: 0 })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+            className="w-full rounded-xl border-2 border-slate-200 px-3 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
           >
             <option value="">Все</option>
             {categories.map((c) => (
@@ -29,7 +29,7 @@ export default function FilterPanel({ filters, onChange, categories }: FilterPan
           </select>
         </div>
         <div>
-          <label className="block text-sm text-slate-600 mb-1">Цена от (₽)</label>
+          <label className="block text-sm font-medium text-slate-600 mb-1.5">Цена от (₸)</label>
           <input
             type="number"
             min="0"
@@ -38,11 +38,11 @@ export default function FilterPanel({ filters, onChange, categories }: FilterPan
               onChange({ min_price: e.target.value || "", offset: 0 })
             }
             placeholder="0"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+            className="w-full rounded-xl border-2 border-slate-200 px-3 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
           />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 mb-1">Цена до (₽)</label>
+          <label className="block text-sm font-medium text-slate-600 mb-1.5">Цена до (₸)</label>
           <input
             type="number"
             min="0"
@@ -51,11 +51,11 @@ export default function FilterPanel({ filters, onChange, categories }: FilterPan
               onChange({ max_price: e.target.value || "", offset: 0 })
             }
             placeholder="—"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+            className="w-full rounded-xl border-2 border-slate-200 px-3 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
           />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 mb-1">Сортировка</label>
+          <label className="block text-sm font-medium text-slate-600 mb-1.5">Сортировка</label>
           <select
             value={`${filters.sort_by}-${filters.sort_order}`}
             onChange={(e) => {
@@ -65,7 +65,7 @@ export default function FilterPanel({ filters, onChange, categories }: FilterPan
               ];
               onChange({ sort_by, sort_order, offset: 0 });
             }}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+            className="w-full rounded-xl border-2 border-slate-200 px-3 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
           >
             <option value="id-asc">По умолчанию</option>
             <option value="name-asc">По имени (А–Я)</option>

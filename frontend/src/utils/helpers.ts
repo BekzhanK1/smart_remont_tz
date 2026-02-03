@@ -27,9 +27,9 @@ export function getOrCreateSessionId(): string {
 }
 
 export function formatPrice(value: number): string {
-  return new Intl.NumberFormat("ru-RU", {
+  return new Intl.NumberFormat("ru-KZ", {
     style: "currency",
-    currency: "RUB",
+    currency: "KZT",
     maximumFractionDigits: 0,
   }).format(value);
 }

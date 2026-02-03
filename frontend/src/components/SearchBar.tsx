@@ -34,7 +34,7 @@ export default function SearchBar({
         value={local}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
+        className="w-full px-4 py-2.5 rounded-xl border-2 border-slate-200 bg-white shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
         aria-label="Поиск"
       />
     </div>

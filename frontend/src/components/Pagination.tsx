@@ -20,25 +20,25 @@ export default function Pagination({
 
   return (
     <nav
-      className="flex items-center justify-center gap-2 py-6"
+      className="flex items-center justify-center gap-3 py-8"
       aria-label="Пагинация"
     >
       <button
         type="button"
         onClick={() => onPageChange(Math.max(0, offset - limit))}
         disabled={!hasPrev}
-        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         Назад
       </button>
-      <span className="px-3 py-2 text-sm text-slate-600">
+      <span className="px-4 py-2.5 text-sm text-slate-600">
         Страница {currentPage} из {totalPages} ({count} товаров)
       </span>
       <button
         type="button"
         onClick={() => onPageChange(offset + limit)}
         disabled={!hasNext}
-        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         Вперёд
       </button>

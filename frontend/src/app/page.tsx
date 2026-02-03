@@ -222,7 +222,7 @@ function HomePageContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-500">Загрузка…</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[var(--background)]"><span className="text-slate-500">Загрузка…</span></div>}>
       <HomePageContent />
     </Suspense>
   );

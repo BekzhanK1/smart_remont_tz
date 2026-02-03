@@ -4,12 +4,16 @@
 
 :root {
   --foreground: #0f172a;
-  --background: #f8fafc;
+  --background: #f0fdf4;
+  --card: #ffffff;
+  --accent: #059669;
+  --accent-hover: #047857;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  font-feature-settings: "rlig" 1, "calt" 1;
 }
 
 .Toastify__toast-container {
