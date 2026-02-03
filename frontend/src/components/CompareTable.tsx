@@ -43,7 +43,7 @@ function getCellValue(product: ProductDetail, key: string): React.ReactNode {
         <span className="text-slate-400">—</span>
       );
     default:
-      return String((product as Record<string, unknown>)[key] ?? "—");
+      return String((product as unknown as Record<string, unknown>)[key] ?? "—");
   }
 }
 
