@@ -43,3 +43,13 @@ export interface FilterState {
   limit: number;
   offset: number;
 }
+
+export interface User {
+  id: number;
+  email: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+}

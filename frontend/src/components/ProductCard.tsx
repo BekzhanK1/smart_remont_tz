@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import type { Product } from "@/types";
 import { formatPrice } from "@/utils/helpers";
+import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { useCompareStore, MAX_COMPARE_ITEMS } from "@/store/compareStore";
 import { addToCart } from "@/services/api";
@@ -22,16 +23,19 @@ export default function ProductCard({
   onDragStart,
 }: ProductCardProps) {
   const [adding, setAdding] = useState(false);
+  const user = useAuthStore((s) => s.user);
   const addItemOptimistic = useCartStore((s) => s.addItemOptimistic);
   const setCart = useCartStore((s) => s.setCart);
   const rollbackAdd = useCartStore((s) => s.rollbackAdd);
+  const cartItems = useCartStore((s) => s.items);
+  const inCart = cartItems.some((i) => i.product_id === product.id);
   const inCompare = useCompareStore((s) => s.has(product.id));
   const toggleCompare = useCompareStore((s) => s.toggle);
   const compareCount = useCompareStore((s) => s.items.length);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (adding) return;
+    if (adding || !user) return;
     setAdding(true);
     const optimisticItem = {
       id: 0,
@@ -101,14 +105,27 @@ export default function ProductCard({
         </Link>
         <p className="mt-2 text-lg font-bold text-slate-900">{formatPrice(product.price)}</p>
         <div className="mt-auto mt-3 flex gap-2">
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={adding}
-            className="flex-1 rounded-lg bg-slate-800 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700 disabled:opacity-60"
-          >
-            {adding ? "Добавляем…" : "В корзину"}
-          </button>
+          {!user ? (
+            <Link
+              href="/login"
+              className="flex flex-1 items-center justify-center rounded-lg border border-slate-300 bg-white py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Войти, чтобы добавить
+            </Link>
+          ) : inCart ? (
+            <span className="flex flex-1 items-center justify-center rounded-lg bg-slate-600 py-2.5 text-sm font-medium text-white">
+              Добавлено
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={adding}
+              className="flex-1 rounded-lg bg-slate-800 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700 disabled:opacity-60"
+            >
+              {adding ? "Добавляем…" : "В корзину"}
+            </button>
+          )}
           <button
             type="button"
             onClick={handleCompare}

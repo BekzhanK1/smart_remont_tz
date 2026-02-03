@@ -29,9 +29,27 @@ pip install -r requirements.txt
 python scripts/seed_products.py
 ```
 
+### Пользователи и JWT
+
+Создать пользователя заранее (локально или внутри контейнера):
+
+```bash
+cd backend
+# Локально (БД на localhost:5432):
+python scripts/create_user.py admin@example.com yourpassword
+
+# Внутри контейнера API (БД по имени сервиса db):
+docker exec -it <api_container_id> python scripts/create_user.py admin@example.com yourpassword
+```
+
+API авторизации:
+- `POST /api/auth/register` — регистрация (body: `email`, `password`)
+- `POST /api/auth/login` — логин (form-data: `username`=email, `password`), ответ: `access_token`
+- `GET /api/auth/me` — текущий пользователь (заголовок `Authorization: Bearer <token>`)
+
 ### Переменные окружения
 
-См. `backend/.env.example`. Для CORS укажите домен фронтенда в `CORS_ORIGINS`.
+См. `backend/.env.example`. Для CORS укажите домен фронтенда в `CORS_ORIGINS`. Для JWT задайте `SECRET_KEY`.
 
 ## Frontend
 
@@ -53,6 +71,7 @@ npm run dev
 - `GET /api/cart/` — содержимое корзины
 - `PUT /api/cart/{item_id}/` — изменить количество
 - `DELETE /api/cart/{item_id}/` — удалить из корзины
+- `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me` — JWT-авторизация
 
 Корзина привязана к `X-Session-ID` (фронт хранит его в localStorage и передаёт в заголовке).
 

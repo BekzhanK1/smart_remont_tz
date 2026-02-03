@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import type { ProductDetail as ProductDetailType } from "@/types";
 import { formatPrice } from "@/utils/helpers";
+import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { useCompareStore, MAX_COMPARE_ITEMS } from "@/store/compareStore";
 import { addToCart } from "@/services/api";
@@ -16,15 +18,18 @@ interface ProductDetailProps {
 export default function ProductDetail({ product }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
+  const user = useAuthStore((s) => s.user);
   const addItemOptimistic = useCartStore((s) => s.addItemOptimistic);
   const setCart = useCartStore((s) => s.setCart);
   const rollbackAdd = useCartStore((s) => s.rollbackAdd);
+  const cartItems = useCartStore((s) => s.items);
+  const inCart = cartItems.some((i) => i.product_id === product.id);
   const inCompare = useCompareStore((s) => s.has(product.id));
   const toggleCompare = useCompareStore((s) => s.toggle);
   const compareCount = useCompareStore((s) => s.items.length);
 
   const handleAddToCart = async () => {
-    if (adding || quantity < 1) return;
+    if (adding || quantity < 1 || !user) return;
     setAdding(true);
     const optimisticItem = {
       id: 0,
@@ -84,25 +89,40 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             </div>
           )}
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <label className="flex items-center gap-2">
-              <span className="text-sm text-slate-600">Количество:</span>
-              <input
-                type="number"
-                min={1}
-                max={999}
-                value={quantity}
-                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                className="w-20 rounded-lg border border-slate-300 px-3 py-2 text-center"
-              />
-            </label>
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={adding}
-              className="rounded-lg bg-slate-800 px-6 py-2.5 font-medium text-white hover:bg-slate-700 disabled:opacity-60"
-            >
-              {adding ? "Добавляем…" : "В корзину"}
-            </button>
+            {user && (
+              <label className="flex items-center gap-2">
+                <span className="text-sm text-slate-600">Количество:</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={999}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                  className="w-20 rounded-lg border border-slate-300 px-3 py-2 text-center"
+                />
+              </label>
+            )}
+            {!user ? (
+              <Link
+                href="/login"
+                className="rounded-lg border border-slate-300 bg-white px-6 py-2.5 font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Войти, чтобы добавить в корзину
+              </Link>
+            ) : inCart ? (
+              <span className="rounded-lg bg-slate-600 px-6 py-2.5 font-medium text-white">
+                Добавлено в корзину
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={adding}
+                className="rounded-lg bg-slate-800 px-6 py-2.5 font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+              >
+                {adding ? "Добавляем…" : "В корзину"}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => {

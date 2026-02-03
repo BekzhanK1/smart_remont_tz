@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CompareTable from "@/components/CompareTable";
+import Header from "@/components/Header";
 import { useCompareStore } from "@/store/compareStore";
 import { fetchProduct } from "@/services/api";
 import type { ProductDetail } from "@/types";
@@ -39,13 +40,7 @@ export default function ComparePage() {
   if (compareItems.length === 0 && !loading) {
     return (
       <div className="min-h-screen">
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-3">
-            <Link href="/" className="text-slate-600 hover:text-slate-900">
-              ← В каталог
-            </Link>
-          </div>
-        </header>
+        <Header />
         <main className="mx-auto max-w-7xl px-4 py-12 text-center">
           <p className="text-slate-600">В сравнении пока нет товаров.</p>
           <p className="mt-2 text-sm text-slate-500">
@@ -64,11 +59,9 @@ export default function ComparePage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link href="/" className="text-slate-600 hover:text-slate-900">
-            ← В каталог
-          </Link>
+      <Header />
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        <div className="mb-4 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-slate-800">Сравнение товаров</h1>
           <button
             type="button"
@@ -78,8 +71,6 @@ export default function ComparePage() {
             Очистить
           </button>
         </div>
-      </header>
-      <main className="mx-auto max-w-7xl px-4 py-8">
         {loading ? (
           <p className="py-12 text-center text-slate-500">Загрузка…</p>
         ) : (

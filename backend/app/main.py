@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from app.config import settings
 from app.database import engine, Base
-from app.routers import products, cart
+from app.routers import products, cart, auth
 
 
 @asynccontextmanager
@@ -32,6 +32,7 @@ app.add_middleware(
 
 app.include_router(products.router)
 app.include_router(cart.router)
+app.include_router(auth.router)
 
 
 @app.get("/health")

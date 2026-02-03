@@ -4,11 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import FilterPanel from "@/components/FilterPanel";
 import Pagination from "@/components/Pagination";
 import ProductList from "@/components/ProductList";
 import { fetchProducts, addToCart } from "@/services/api";
+import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import type { FilterState, Product, ProductsResponse } from "@/types";
 
@@ -119,6 +121,7 @@ export default function HomePage() {
     setFilters((prev) => ({ ...prev, offset: newOffset }));
   }, []);
 
+  const user = useAuthStore((s) => s.user);
   const addItemOptimistic = useCartStore((s) => s.addItemOptimistic);
   const setCart = useCartStore((s) => s.setCart);
   const rollbackAdd = useCartStore((s) => s.rollbackAdd);
@@ -127,6 +130,10 @@ export default function HomePage() {
     (e: React.DragEvent) => {
       e.preventDefault();
       setDropTarget(false);
+      if (!user) {
+        toast.info("Войдите, чтобы добавить в корзину");
+        return;
+      }
       try {
         const json = e.dataTransfer.getData("application/json");
         const product = JSON.parse(json) as Product;
@@ -154,7 +161,7 @@ export default function HomePage() {
         // ignore
       }
     },
-    [addItemOptimistic, setCart, rollbackAdd]
+    [user, addItemOptimistic, setCart, rollbackAdd]
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -167,27 +174,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
-          <Link href="/" className="text-xl font-bold text-slate-900">
-            Каталог
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/cart"
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-            >
-              Корзина
-            </Link>
-          </div>
-        </div>
-        <div className="mx-auto max-w-7xl px-4 pb-3">
+      <Header
+        showSearch
+        searchSlot={
           <SearchBar
             value={filters.search}
             onChange={(search) => applyFilters({ search, offset: 0 })}
           />
-        </div>
-      </header>
+        }
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-6">
         <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
